@@ -1,0 +1,907 @@
+openapi: 3.0.0
+info:
+  title: BackTestingAPI
+  version: '1.0'
+  description: Get the backtesting result of a strategy specified by users
+  contact:
+    url: /
+    email: /
+    name: Jensen
+  termsOfService: /
+servers:
+  - url: 'http://backtestingapp.herokuapp.com'
+paths:
+  /api/v1/resources/allinfo:
+    get:
+      summary: BackTest Detailed Result
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                description: ''
+                properties:
+                  linerecord:
+                    description: "\"linerecord\" is the direct response to query parameter \"linereturn\" . \n\n\"linereturn\" is used to ask for lines object. And \"linerecord\" are returning the required line objects on request. \n\nTherefore, the number of line objects depend on query parameters."
+                    type: object
+                    properties:
+                      '':
+                        type: array
+                        description: "A line object return. The key of this object is the line object name mentioned in \"linereturn\". \n\nThe value part is a number array.And it's also backtest result of line object mentioned. \n\nThe length of number array is the number days that the stock market is open."
+                        uniqueItems: true
+                        items:
+                          type: number
+                          example: 102.67500000000001
+                  trade stat:
+                    type: object
+                    description: 'Contain statistical result of trade using the stategy mentioned by user. '
+                    properties:
+                      sell:
+                        $ref: '#/components/schemas/trade'
+                      buy:
+                        $ref: '#/components/schemas/trade'
+                      pnlcomm:
+                        type: array
+                        description: |-
+                          The pnlcomm of each trade if we apply the strategy.
+
+                          The first element in array is the pnlcomm of the first trade. The second element is the pnlcomm of the second trade and so on.
+
+                          The pnlcomm can be negative if we lose money.
+                        items:
+                          type: number
+                          example: -31.5
+                          format: float
+                      pnlpercentage:
+                        type: array
+                        description: |-
+                          The pnlpercentage of each trade if we apply the strategy.
+
+                          The first element in array is the pnlpercentage of the first trade. The second element is the pnlpercentage of the second trade and so on.
+
+                          The pnlpercentage can be negative if we lose money.
+                        items:
+                          type: number
+                          example: -0.03186162949476559
+                          format: float
+                      maxprofitpercent:
+                        type: number
+                        example: 0.3
+                        format: float
+                        description: The maximum profit rate. return 0 if we lose moeney in all trade.
+                      tradenum:
+                        type: number
+                        example: 3
+                        description: "Total number of trade/transcation.\n1 trade = 1 buy + 1 sell "
+                      maxlosspercent:
+                        type: number
+                        description: The maximum loss rate. return 0 if we gain moeney in all trade.
+                        format: float
+                        example: -0.1
+                      winrate:
+                        type: number
+                        format: float
+                        example: 0.3
+                      pnlfinal:
+                        type: number
+                        example: 1.33232873
+                        format: float
+                        description: a factor measure how much you gain or loss by applying the specific strategy. This factor is independent of initial capital.
+                  cash:
+                    type: array
+                    description: |-
+                      Record of cash you hold over time.
+                      The length of number array is the number days that the stock market is open.
+                    items:
+                      type: number
+                      format: float
+                      example: 1000
+                  value:
+                    type: array
+                    description: |-
+                      Record of asset value you hold over time.
+                      The length of number array is the number days that the stock market is open.
+                    items:
+                      type: number
+                      format: float
+                      example: 1000
+                  date:
+                    type: array
+                    description: Record of days that the stock market is open.
+                    items:
+                      type: string
+                      format: date
+                      example: '2018-11-23'
+                  volume:
+                    type: array
+                    description: Record of volume.
+                    items:
+                      type: number
+                      format: float
+                      example: 19484300
+                  open:
+                    type: array
+                    description: Record of open pice.
+                    items:
+                      type: number
+                      format: float
+                      example: 95.73999786
+                  close:
+                    type: array
+                    description: Record of close price
+                    items:
+                      type: number
+                      example: 90.289312
+                      format: float
+                  high:
+                    type: array
+                    description: ''
+                    items:
+                      type: number
+                      format: float
+                      example: 101.8392
+                  low:
+                    type: array
+                    items:
+                      type: number
+                      example: 90.932323
+                      format: float
+              examples:
+                example-1:
+                  value:
+                    linerecord:
+                      sma(2):
+                        - NAN
+                        - 102.67500000000001
+                        - 104.67
+                        - 106.95
+                        - 108.445
+                        - 108.33
+                        - 109.25999999999999
+                        - 108.1
+                        - 106.68
+                        - 104.87
+                        - 104.08500000000001
+                        - 105.93
+                        - 106.66
+                        - 107.08000000000001
+                        - 105.58500000000001
+                        - 102.37
+                        - 101.36
+                        - 101.755
+                        - 100.55000000000001
+                        - 97.875
+                        - 94.25999999999999
+                        - 95.4
+                        - 98.85499999999999
+                        - 98.77
+                      sma(3):
+                        - NAN
+                        - NAN
+                        - 103.45
+                        - 106.08
+                        - 107.29666666666667
+                        - 108.52
+                        - 108.83666666666666
+                        - 108.29
+                        - 107.73666666666666
+                        - 105.36333333333334
+                        - 105.06
+                        - 104.86333333333334
+                        - 106.25333333333333
+                        - 106.86000000000001
+                        - 106.02333333333333
+                        - 104
+                        - 102.21
+                        - 101.44666666666667
+                        - 100.99666666666667
+                        - 99.12333333333333
+                        - 96
+                        - 95.69
+                        - 96.65333333333332
+                        - 98.69666666666666
+                    tradestat:
+                      sell:
+                        dt:
+                          - '2018-12-06'
+                          - '2018-12-17'
+                          - '2018-12-21'
+                        pnl:
+                          - -31.5
+                          - -22.590000000000046
+                          - -19.260000000000005
+                        pnlcomm:
+                          - -31.5
+                          - -22.590000000000046
+                          - -19.260000000000005
+                        value:
+                          - 0
+                          - 0
+                          - 0
+                        size:
+                          - -9
+                          - -9
+                          - -9
+                        price:
+                          - 106.35
+                          - 103.91
+                          - 99.48
+                        commission:
+                          - 0
+                          - 0
+                          - 0
+                      buy:
+                        dt:
+                          - '2018-12-04'
+                          - '2018-12-12'
+                          - '2018-12-20'
+                        pnl:
+                          - 0
+                          - 0
+                          - 0
+                        pnlcomm:
+                          - 0
+                          - 0
+                          - 0
+                        value:
+                          - 988.65
+                          - 957.78
+                          - 914.58
+                        size:
+                          - 9
+                          - 9
+                          - 9
+                        price:
+                          - 109.85
+                          - 106.42
+                          - 101.62
+                        commission:
+                          - 0
+                          - 0
+                          - 0
+                      maxprofitpercent: 0
+                      tradenum: 3
+                      maxlosspercent: -0.03186162949476559
+                      pnlcomm:
+                        - -31.5
+                        - -22.590000000000046
+                        - -19.260000000000005
+                      pnlpercentage:
+                        - -0.03186162949476559
+                        - -0.02358579214433382
+                        - -0.02105884668372368
+                    cash:
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 11.350000000000023
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 10.720000000000027
+                      - 10.720000000000027
+                      - 10.720000000000027
+                      - 945.91
+                      - 945.91
+                      - 945.91
+                      - 31.329999999999927
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 34.210000000000036
+                    value:
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 972.82
+                      - 976.0600000000001
+                      - 945.91
+                      - 945.91
+                      - 945.91
+                      - 945.91
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 919.63
+                    date:
+                      - '2018-11-23'
+                      - '2018-11-26'
+                      - '2018-11-27'
+                      - '2018-11-28'
+                      - '2018-11-29'
+                      - '2018-11-30'
+                      - '2018-12-03'
+                      - '2018-12-04'
+                      - '2018-12-06'
+                      - '2018-12-07'
+                      - '2018-12-10'
+                      - '2018-12-11'
+                      - '2018-12-12'
+                      - '2018-12-13'
+                      - '2018-12-14'
+                      - '2018-12-17'
+                      - '2018-12-18'
+                      - '2018-12-19'
+                      - '2018-12-20'
+                      - '2018-12-21'
+                      - '2018-12-24'
+                      - '2018-12-26'
+                      - '2018-12-27'
+                      - '2018-12-28'
+      operationId: get-backtest-result_allinfo
+      description: "Detailed mode: return all details of backtest result. \nLine objects for drawing graph can be obtained by this endpoint."
+      parameters:
+        - schema:
+            type: string
+            examples: 'sma(6) crossup sma(14) or highest(4) < 90 or sma(sma(5),5) < sma(7)'
+          in: query
+          name: buystrategy
+          required: true
+          explode: false
+          description: the query that describe the buy strategy
+        - schema:
+            type: string
+            example: sma(7) crossdown sma(14) and slope(sma(14)) neg
+          in: query
+          name: sellstrategy
+          description: the query that describe the sell strategy
+          required: true
+        - schema:
+            type: string
+            example: sma(7); sma(14); slope(sma(14)) neg; slope(sma(14))
+          in: query
+          name: linereturn
+          description: the query that describe the line objects you want to return after testing
+        - schema:
+            type: string
+            example: '2018-1-10'
+          in: query
+          required: true
+          name: fromdate
+          description: the starting date of stock data
+        - schema:
+            type: string
+            example: '2018-12-30'
+          in: query
+          name: todate
+          description: the ending date of stock data
+          required: true
+        - schema:
+            type: string
+            example: MSFT
+          in: query
+          required: true
+          name: dataname
+          description: 'input of dataname hould match with datamode e.g:YahooFinanceCSVData match with path name dataname; YahooFinanceData match with stock name dataname'
+        - schema:
+            type: number
+          in: query
+          name: cash
+          description: the cash you have at the beginning
+        - schema:
+            type: string
+            enum:
+              - day
+              - month
+              - week
+          in: query
+          name: timeframe
+          description: 'day, week or month'
+        - schema:
+            type: number
+            example: 0.0022
+            format: float
+          in: query
+          name: commission
+          description: commission you pay in each buy/sell action
+      tags:
+        - bt detailed result
+    parameters: []
+  /api/v1/resources/stat:
+    get:
+      get: null
+      summary: BackTest Simply Statistics
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                description: ''
+                properties:
+                  trade stat:
+                    type: object
+                    description: 'Contain statistical result of trade using the stategy mentioned by user. '
+                    properties:
+                      maxprofitpercent:
+                        type: number
+                        example: 0.3
+                        format: float
+                        description: The maximum profit rate. return 0 if we lose moeney in all trade.
+                      tradenum:
+                        type: number
+                        example: 3
+                        description: "Total number of trade/transcation.\n1 trade = 1 buy + 1 sell "
+                      maxlosspercent:
+                        type: number
+                        description: The maximum loss rate. return 0 if we gain moeney in all trade.
+                        format: float
+                        example: -0.1
+                      winrate:
+                        type: number
+                        format: float
+                        example: 0.3
+                      pnlfinal:
+                        type: number
+                        example: 1.33232873
+                        format: float
+                        description: a factor measure how much you gain or loss by applying the specific strategy. This factor is independent of initial capital.
+              examples:
+                example-1:
+                  value:
+                    linerecord:
+                      sma(2):
+                        - NAN
+                        - 102.67500000000001
+                        - 104.67
+                        - 106.95
+                        - 108.445
+                        - 108.33
+                        - 109.25999999999999
+                        - 108.1
+                        - 106.68
+                        - 104.87
+                        - 104.08500000000001
+                        - 105.93
+                        - 106.66
+                        - 107.08000000000001
+                        - 105.58500000000001
+                        - 102.37
+                        - 101.36
+                        - 101.755
+                        - 100.55000000000001
+                        - 97.875
+                        - 94.25999999999999
+                        - 95.4
+                        - 98.85499999999999
+                        - 98.77
+                      sma(3):
+                        - NAN
+                        - NAN
+                        - 103.45
+                        - 106.08
+                        - 107.29666666666667
+                        - 108.52
+                        - 108.83666666666666
+                        - 108.29
+                        - 107.73666666666666
+                        - 105.36333333333334
+                        - 105.06
+                        - 104.86333333333334
+                        - 106.25333333333333
+                        - 106.86000000000001
+                        - 106.02333333333333
+                        - 104
+                        - 102.21
+                        - 101.44666666666667
+                        - 100.99666666666667
+                        - 99.12333333333333
+                        - 96
+                        - 95.69
+                        - 96.65333333333332
+                        - 98.69666666666666
+                    tradestat:
+                      sell:
+                        dt:
+                          - '2018-12-06'
+                          - '2018-12-17'
+                          - '2018-12-21'
+                        pnl:
+                          - -31.5
+                          - -22.590000000000046
+                          - -19.260000000000005
+                        pnlcomm:
+                          - -31.5
+                          - -22.590000000000046
+                          - -19.260000000000005
+                        value:
+                          - 0
+                          - 0
+                          - 0
+                        size:
+                          - -9
+                          - -9
+                          - -9
+                        price:
+                          - 106.35
+                          - 103.91
+                          - 99.48
+                        commission:
+                          - 0
+                          - 0
+                          - 0
+                      buy:
+                        dt:
+                          - '2018-12-04'
+                          - '2018-12-12'
+                          - '2018-12-20'
+                        pnl:
+                          - 0
+                          - 0
+                          - 0
+                        pnlcomm:
+                          - 0
+                          - 0
+                          - 0
+                        value:
+                          - 988.65
+                          - 957.78
+                          - 914.58
+                        size:
+                          - 9
+                          - 9
+                          - 9
+                        price:
+                          - 109.85
+                          - 106.42
+                          - 101.62
+                        commission:
+                          - 0
+                          - 0
+                          - 0
+                      maxprofitpercent: 0
+                      tradenum: 3
+                      maxlosspercent: -0.03186162949476559
+                      pnlcomm:
+                        - -31.5
+                        - -22.590000000000046
+                        - -19.260000000000005
+                      pnlpercentage:
+                        - -0.03186162949476559
+                        - -0.02358579214433382
+                        - -0.02105884668372368
+                    cash:
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 11.350000000000023
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 10.720000000000027
+                      - 10.720000000000027
+                      - 10.720000000000027
+                      - 945.91
+                      - 945.91
+                      - 945.91
+                      - 31.329999999999927
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 34.210000000000036
+                    value:
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 1000
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 968.5
+                      - 972.82
+                      - 976.0600000000001
+                      - 945.91
+                      - 945.91
+                      - 945.91
+                      - 945.91
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 926.65
+                      - 919.63
+                    date:
+                      - '2018-11-23'
+                      - '2018-11-26'
+                      - '2018-11-27'
+                      - '2018-11-28'
+                      - '2018-11-29'
+                      - '2018-11-30'
+                      - '2018-12-03'
+                      - '2018-12-04'
+                      - '2018-12-06'
+                      - '2018-12-07'
+                      - '2018-12-10'
+                      - '2018-12-11'
+                      - '2018-12-12'
+                      - '2018-12-13'
+                      - '2018-12-14'
+                      - '2018-12-17'
+                      - '2018-12-18'
+                      - '2018-12-19'
+                      - '2018-12-20'
+                      - '2018-12-21'
+                      - '2018-12-24'
+                      - '2018-12-26'
+                      - '2018-12-27'
+                      - '2018-12-28'
+      operationId: get-backtest-result_stat
+      description: "Simply mode: return the simplest statistics of backtest result. \n"
+      parameters:
+        - schema:
+            type: string
+            examples: 'sma(6) crossup sma(14) or highest(4) < 90 or sma(sma(5),5) < sma(7)'
+          in: query
+          name: buystrategy
+          required: true
+          explode: false
+          description: the query that describe the buy strategy
+        - schema:
+            type: string
+            example: sma(7) crossdown sma(14) and slope(sma(14)) neg
+          in: query
+          name: sellstrategy
+          description: the query that describe the sell strategy
+          required: true
+        - schema:
+            type: string
+            example: '2018-1-10'
+          in: query
+          required: true
+          name: fromdate
+          description: the starting date of stock data
+        - schema:
+            type: string
+            example: '2018-12-30'
+          in: query
+          name: todate
+          description: the ending date of stock data
+          required: true
+        - schema:
+            type: string
+            example: MSFT
+          in: query
+          required: true
+          name: dataname
+          description: 'input of dataname hould match with datamode e.g:YahooFinanceCSVData match with path name dataname; YahooFinanceData match with stock name dataname'
+        - schema:
+            type: string
+            enum:
+              - day
+              - month
+              - week
+          in: query
+          name: timeframe
+          description: 'day, week or month'
+        - schema:
+            type: number
+            example: 0.0022
+            format: float
+          in: query
+          name: commission
+          description: commission you pay in each buy/sell action
+      tags:
+        - bt simple stat
+  /api/v1/resources/batch:
+    get:
+      get: null
+      summary: BackTest Batch Run Result
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                description: ''
+                properties:
+                  '':
+                    type: object
+                    description: 'return tickers:score pairs according to tickers you input'
+                    properties:
+                      '':
+                        type: number
+                        description: 'ticker: score pairs'
+              examples:
+                Input exampe:
+                  value:
+                    buystrategy: sma(6) crossdown sma(13)
+                    sellstrategy: sma(6) crossup sma(13)
+                    fromdate: '2019-8-01'
+                    todate: '2020-8-01'
+                    dataname: 'STM,FB,T'
+                output exampe:
+                  value:
+                    STM: 0.9184074231762053
+                    FB: 0.8939908602769924
+                    T: 0.8693525872518001
+      operationId: get-backtest-result_batchrun
+      description: 'batch run mode: only show tickers and their score ranked in descending order'
+      parameters:
+        - schema:
+            type: string
+            examples: 'sma(6) crossup sma(14) '
+          in: query
+          name: buystrategy
+          required: true
+          explode: false
+          description: the query that describe the buy strategy
+        - schema:
+            type: string
+            example: sma(6) crossdown sma(14)
+          in: query
+          name: sellstrategy
+          description: the query that describe the sell strategy
+          required: true
+        - schema:
+            type: string
+            example: '2018-1-10'
+          in: query
+          required: true
+          name: fromdate
+          description: the starting date of stock data
+        - schema:
+            type: string
+            example: '2018-12-30'
+          in: query
+          name: todate
+          description: the ending date of stock data
+          required: true
+        - schema:
+            type: string
+            example: 'MSFT,DELL,TB'
+          in: query
+          required: true
+          name: dataname
+          description: name of tickers seperated by comma
+      tags:
+        - bt detailed result
+    parameters: []
+components:
+  schemas:
+    trade:
+      title: trade
+      type: object
+      description: |-
+        Trade object describe all trade detrails of a trade action( buy / sell)
+
+        common property of child array: length of the child array is the total number of trade which is all the same.
+      x-examples:
+        sell example:
+          dt:
+            - '2018-12-06'
+            - '2018-12-17'
+            - '2018-12-21'
+          pnl:
+            - -31.5
+            - -22.590000000000046
+            - -19.260000000000005
+          pnlcomm:
+            - -31.5
+            - -22.590000000000046
+            - -19.260000000000005
+          value:
+            - 0
+            - 0
+            - 0
+          size:
+            - -9
+            - -9
+            - -9
+          price:
+            - 106.35
+            - 103.91
+            - 99.48
+          commission:
+            - 0
+            - 0
+            - 0
+        buy example:
+          dt:
+            - '2018-12-04'
+            - '2018-12-12'
+            - '2018-12-20'
+          pnl:
+            - 0
+            - 0
+            - 0
+          pnlcomm:
+            - 0
+            - 0
+            - 0
+          value:
+            - 988.65
+            - 957.78
+            - 914.58
+          size:
+            - 9
+            - 9
+            - 9
+          price:
+            - 109.85
+            - 106.42
+            - 101.62
+          commission:
+            - 0
+            - 0
+            - 0
+      x-tags:
+        - trade object
+      properties:
+        dt:
+          type: array
+          description: 'Array of days when trade happens  '
+          items:
+            type: string
+            example: '2018-12-06'
+            format: date
+        pnl:
+          type: array
+          description: Array of number showing the Profit and Loss of each trade
+          items:
+            type: number
+            example: -31.5
+        pnlcomm:
+          type: array
+          description: Array of number showing the Profit and Loss of each trade after taking the commission into account.
+          items:
+            type: number
+            example: -31.5
+        value:
+          type: array
+          description: Array of number showing the trade value of each trade.
+          items:
+            type: number
+            example: 988.6
+        size:
+          type: array
+          description: Array of number showing the trade size of each trade.
+          items:
+            type: number
+            example: 9
+        price:
+          type: array
+          description: Array of number showing the trade price of each trade.
+          items:
+            type: number
+            example: 109.85
+        commission:
+          type: array
+          description: Array of number showing the commission cost of each trade.
+          items:
+            type: number
+            example: 5
+  securitySchemes: {}
