@@ -1,8 +1,5 @@
 # backtesting
 
-# Documentation
-https://stoplight.io/p/docs/gh/Jensen12341234/backtesting
-
 # guidelines for code modification
 
 ### How to create new API endpoints ?
